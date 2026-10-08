@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Gastos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f2f5; 
+            padding: 15px; 
+            max-width: 500px; 
+            margin: auto; 
+            color: #333; 
+        }
+        h2 { 
+            text-align: center; 
+            color: #1a237e; 
+            margin-top: 10px;
+            margin-bottom: 20px; 
+            font-size: 24px;
+        }
+        .totais { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+        .card { 
+            flex: 1; 
+            padding: 12px; 
+            background: #ffffff; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
+            text-align: center; 
+            border-top: 4px solid #1e88e5; 
+        }
+        .card.cassio { 
+            border-top-color: #fb8c00; 
+        }
+        .card h3 { 
+            margin: 0 0 5px 0; 
+            font-size: 13px; 
+            color: #666; 
+            text-transform: uppercase; 
+        }
+        .card p { 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: #2e7d32; 
+            margin: 0; 
+        }
+        form { 
+            background: #ffffff; 
+            padding: 18px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
+            margin-bottom: 25px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 14px; 
+        }
+        
+        /* Botões de Seleção do Cartão (Estilo Abas) */
+        .seletor-cartao {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-opcao {
+            flex: 1;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border: 2px solid #ccc;
+            background-color: #f5f5f5;
+            color: #666;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        /* Cartão selecionado atualmente */
+        .btn-opcao.ativo-adriana {
+            border-color: #1e88e5;
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .btn-opcao.ativo-cassio {
+            border-color: #fb8c00;
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+
+        input[type="text"], input[type="number"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            background-color: #fafafa;
+        }
+        button.btn-salvar { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #1e88e5; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px; 
+        }
+        button.btn-salvar:hover { 
+            background-color: #1565c0; 
+        }
+        .historico-titulo { 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            color: #333; 
+        }
+        ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        li { 
+            background: #ffffff; 
+            padding: 12px 15px; 
+            margin-bottom: 10px; 
+            border-radius: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        }
+        .item-info { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2px;
+        }
+        .item-desc { 
+            font-weight: bold; 
+            font-size: 16px; 
+        }
+        .item-meta { 
+            font-size: 12px; 
+            color: #777; 
+        }
+        .item-direita {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .item-valor { 
+            font-weight: bold; 
+            color: #2e7d32; 
+            font-size: 16px; 
+        }
+        .btn-excluir { 
+            background-color: #ffebee; 
+            color: #d32f2f; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 12px; 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            border: 1px solid #ffcdd2;
+            transition: all 0.2s;
+        }
+        .btn-excluir:hover { 
+            background-color: #ef5350; 
+            color: white; 
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Controle de Gastos</h2>
+
+    <!-- Totais dos Cartões -->
+    <div class="totais">
+        <div class="card">
+            <h3>Total Adriana</h3>
+            <p>R$ {{ total_adriana|floatformat:2 }}</p>
+        </div>
+        <div class="card cassio">
+            <h3>Total Cássio</h3>
+            <p>R$ {{ total_cassio|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Formulário Simplificado com Botões de Alternância -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="cartao" id="cartao_input" value="{{ ultimo_cartao }}">
+
+        <div class="form-group">
+            <label>Selecione o Cartão:</label>
+            <div class="seletor-cartao">
+                <button type="button" 
+                        id="btn-adriana" 
+                        class="btn-opcao {% if ultimo_cartao == 'adriana' %}ativo-adriana{% endif %}" 
+                        onclick="selecionarCartao('adriana')">
+                    Adriana
+                </button>
+                <button type="button" 
+                        id="btn-cassio" 
+                        class="btn-opcao {% if ultimo_cartao == 'cassio' %}ativo-cassio{% endif %}" 
+                        onclick="selecionarCartao('cassio')">
+                    Cássio
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Produto / Descrição:</label>
+            <input type="text" name="descricao" placeholder="Ex: Quitanda, Mercado" required>
+        </div>
+        <div class="form-group">
+            <label>Valor (R$):</label>
+            <input type="number" step="0.01" name="valor" placeholder="Ex: 700" required>
+        </div>
+        <button type="submit" class="btn-salvar">Adicionar Gasto</button>
+    </form>
+
+    <!-- Histórico de Gastos -->
+    <div class="historico-titulo">Histórico de Gastos</div>
+    <ul>
+        {% for gasto in gastos %}
+            <li>
+                <div class="item-info">
+                    <span class="item-desc">{{ gasto.descricao }}</span>
+                    <span class="item-meta">{{ gasto.data|date:"d/m/Y" }} • Cartão: {{ gasto.get_cartao_display }}</span>
+                </div>
+                <div class="item-direita">
+                    <span class="item-valor">R$ {{ gasto.valor }}</span>
+                    <a href="{% url 'excluir_gasto' gasto.id %}" class="btn-excluir" onclick="return confirm('Deseja excluir esse gasto?')" title="Excluir Gasto">Excluir</a>
+                </div>
+            </li>
+        {% empty %}
+            <li style="justify-content: center; color: #888;">Nenhum gasto registrado ainda.</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function selecionarCartao(cartao) {
+            document.getElementById('cartao_input').value = cartao;
+            const btnAdriana = document.getElementById('btn-adriana');
+            const btnCassio = document.getElementById('btn-cassio');
+
+            if (cartao === 'adriana') {
+                btnAdriana.className = 'btn-opcao ativo-adriana';
+                btnCassio.className = 'btn-opcao';
+            } else {
+                btnAdriana.className = 'btn-opcao';
+                btnCassio.className = 'btn-opcao ativo-cassio';
+            }
+        }
+    </script>
+
+</body>
+</html>

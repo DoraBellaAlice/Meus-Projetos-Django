@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ad0iot@k4m3esbb6xb0&j1mwiaz8flbe802yg-zjdgl)ejb9$o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['financeiro-mae.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition

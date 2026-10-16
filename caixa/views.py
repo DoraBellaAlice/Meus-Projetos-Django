@@ -1,8 +1,12 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum
 from django.utils import timezone
 from .models import Gasto
 
+@login_required
 def inicio(request):
     # Pega o último cartão usado salvo na memória ou deixa 'adriana' como padrão
     ultimo_cartao = request.session.get('ultimo_cartao', 'adriana')
@@ -37,8 +41,25 @@ def inicio(request):
     }
     return render(request, 'inicio.html', context)
 
-
+@login_required
 def excluir_gasto(request, gasto_id):
     gasto = get_object_or_404(Gasto, id=gasto_id)
     gasto.delete()
     return redirect('inicio')
+
+def login_view(request):
+    if request.method == 'POST':
+        usuario = request.POST.get('username')
+        senha = request.POST.get('password')
+
+        usuario_autenticado = authenticate(
+            request,
+            username=usuario,
+            password=senha
+        )
+
+        if usuario_autenticado is not None:
+            login(request, usuario_autenticado)
+            return redirect('inicio')
+
+    return render(request, 'login.html')

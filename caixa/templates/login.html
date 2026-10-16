@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Controle Financeiro</title>
+
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        fex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #e8f4f1, #f5f7fb);
+        color: #243746;
+    }
+
+    h1 {
+        text-align: center;
+        color: #244b49;
+        font-size: 26px;
+        margin: 0 0 12px 0;
+    }
+
+    p {
+        text-align: center;
+        color: #687782;
+        margin-bottom: 28px;
+    }
+
+    form {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 35px 30px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        margin-bottom: 20px;
+        border: 1px solid #d5dfdf;
+        border-radius: 9px;
+        font-size: 16px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #278779;
+        box-shadow: 0 0 0 3px rgba(39, 135, 121, 0.12);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background-color: #278779;
+        color: white;
+        border: none;
+        border-radius: 9px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #1d6c61;
+    }
+
+    @media (max-width: 480px) {
+        form {
+            padding: 28px 22px;
+        }
+
+        h1 {
+            font-size: 23px;
+        }
+    }
+</style>
+</head>
+<body>
+    <h1>Controle Financeiro</h1>
+    <p>Entre para consultar seus gastos.</p>
+    <form method="POST">
+        {%  csrf_token %}
+
+        <label for="usuario">Usuário:</label>
+        <input type="text" id="usuario" name="username" required>
+        <b><br>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="password" required>
+       
+        <br><br>
+
+        <button type="submit"> Entrar </button>
+      </form>
+
+</body>
+</html>
